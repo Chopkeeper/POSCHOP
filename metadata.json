@@ -1,0 +1,5 @@
+{
+  "name": "ระบบ POS อัจฉริยะ (Smart POS System)",
+  "description": "ระบบ Point of Sale (POS) ครบวงจรสำหรับจัดการสินค้า, การขาย, และรายงาน พร้อมฟีเจอร์ AI ช่วยสร้างคำอธิบายสินค้า",
+  "requestFramePermissions": []
+}
