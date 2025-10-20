@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import * as React from 'react';
 import { useAppContext } from '../context/AppContext';
 import { Settings } from '../types';
 
 const SettingsPage: React.FC = () => {
     const { state, dispatch } = useAppContext();
-    const [settings, setSettings] = useState<Settings>(state.settings);
-    const [isSaved, setIsSaved] = useState(false);
+    const [settings, setSettings] = React.useState<Settings>(state.settings);
+    const [isSaved, setIsSaved] = React.useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSettings({ ...settings, [e.target.name]: e.target.value });

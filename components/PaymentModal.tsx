@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import * as React from 'react';
 import { PaymentMethod } from '../types';
 import { formatCurrency } from '../utils/formatter';
 
@@ -11,8 +10,8 @@ interface PaymentModalProps {
 }
 
 const PaymentModal: React.FC<PaymentModalProps> = ({ total, isOpen, onClose, onConfirm }) => {
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(PaymentMethod.Cash);
-  const [receivedAmount, setReceivedAmount] = useState<string>('');
+  const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>(PaymentMethod.Cash);
+  const [receivedAmount, setReceivedAmount] = React.useState<string>('');
   
   if (!isOpen) return null;
 

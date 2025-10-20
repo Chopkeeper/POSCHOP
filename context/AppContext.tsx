@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useEffect, Dispatch } from 'react';
+import * as React from 'react';
 import { AppState, Action, User, Order, OrderStatus, Product } from '../types';
 import { INITIAL_PRODUCTS, INITIAL_SETTINGS, INITIAL_USERS } from '../constants';
 
@@ -87,9 +87,7 @@ const appReducer = (state: AppState, action: Action): AppState => {
     case 'CREATE_ORDER': {
         const newOrder: Order = {
             ...action.payload,
-            id: `ORD-${Date.now()}`,
             createdAt: new Date().toISOString(),
-            status: OrderStatus.New
         };
         const updatedProducts = state.products.map(p => {
             const orderedItem = newOrder.items.find(item => item.id === p.id);
@@ -160,10 +158,10 @@ const appReducer = (state: AppState, action: Action): AppState => {
 
 interface AppContextType {
     state: AppState;
-    dispatch: Dispatch<Action>;
+    dispatch: React.Dispatch<Action>;
 }
 
-const AppContext = createContext<AppContextType>({
+const AppContext = React.createContext<AppContextType>({
     state: initialState,
     dispatch: () => null,
 });
@@ -185,9 +183,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         }
     };
 
-    const [state, dispatch] = useReducer(appReducer, initialState, initializer);
+    const [state, dispatch] = React.useReducer(appReducer, initialState, initializer);
 
-    useEffect(() => {
+    React.useEffect(() => {
         try {
             window.localStorage.setItem(APP_STATE_KEY, JSON.stringify(state));
         } catch (error) {
@@ -203,7 +201,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 };
 
 export const useAppContext = () => {
-    const context = useContext(AppContext);
+    const context = React.useContext(AppContext);
     if (context === undefined) {
         throw new Error('useAppContext must be used within an AppProvider');
     }

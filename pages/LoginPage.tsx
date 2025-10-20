@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import * as React from 'react';
 import { useAppContext } from '../context/AppContext';
 
 const LoginPage: React.FC = () => {
   const { state, dispatch } = useAppContext();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [username, setUsername] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [error, setError] = React.useState('');
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();

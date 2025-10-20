@@ -1,5 +1,4 @@
-
-import React, { useState, useMemo } from 'react';
+import * as React from 'react';
 import { useAppContext } from '../context/AppContext';
 import ProductCard from '../components/ProductCard';
 import OrderSummary from '../components/OrderSummary';
@@ -10,14 +9,14 @@ import { CATEGORIES } from '../constants';
 
 const SalesPage: React.FC = () => {
   const { state, dispatch } = useAppContext();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [activeCategory, setActiveCategory] = useState('ทั้งหมด');
-  const [isPaymentModalOpen, setPaymentModalOpen] = useState(false);
-  const [isReceiptModalOpen, setReceiptModalOpen] = useState(false);
-  const [lastOrder, setLastOrder] = useState<Order | null>(null);
-  const [totalToCharge, setTotalToCharge] = useState(0);
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const [activeCategory, setActiveCategory] = React.useState('ทั้งหมด');
+  const [isPaymentModalOpen, setPaymentModalOpen] = React.useState(false);
+  const [isReceiptModalOpen, setReceiptModalOpen] = React.useState(false);
+  const [lastOrder, setLastOrder] = React.useState<Order | null>(null);
+  const [totalToCharge, setTotalToCharge] = React.useState(0);
 
-  const filteredProducts = useMemo(() => {
+  const filteredProducts = React.useMemo(() => {
     return state.products.filter(product => {
       const matchesCategory = activeCategory === 'ทั้งหมด' || product.category === activeCategory;
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -44,8 +43,10 @@ const SalesPage: React.FC = () => {
     const tax = subtotal * (state.settings.taxRate / 100);
     const total = subtotal + tax;
     const totalPrepTime = state.currentOrder.reduce((sum, item) => sum + (item.prepTimeInMinutes * item.quantity), 0);
+    const orderId = `ORD-${Date.now()}`;
 
-    const newOrderPayload: Omit<Order, 'id' | 'createdAt' | 'status'> = {
+    const newOrderPayload: Omit<Order, 'createdAt'> = {
+        id: orderId,
         items: state.currentOrder,
         subtotal,
         tax,
@@ -55,26 +56,15 @@ const SalesPage: React.FC = () => {
         change: receivedAmount ? receivedAmount - total : 0,
         cashierId: state.currentUser.id,
         totalPrepTime,
+        status: OrderStatus.Paid,
     };
     
-    // Create the order first
     dispatch({ type: 'CREATE_ORDER', payload: newOrderPayload });
     
-    // Then create a temporary full order object for the receipt
     const createdOrderForReceipt: Order = {
         ...newOrderPayload,
-        id: `ORD-${Date.now()}`, // temp ID for receipt
         createdAt: new Date().toISOString(),
-        status: OrderStatus.New, // default status
     };
-
-    // Update status to Paid for the new order in state
-    // In a real app, this would be more robust. We'd get the real ID back.
-    // For now, we find the latest order for this cashier.
-    const latestOrder = state.liveOrders.slice().reverse().find(o => o.cashierId === state.currentUser?.id);
-    if(latestOrder) {
-      dispatch({ type: 'UPDATE_ORDER_STATUS', payload: { orderId: latestOrder.id, status: OrderStatus.Paid } });
-    }
 
     setLastOrder(createdOrderForReceipt);
     setPaymentModalOpen(false);

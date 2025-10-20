@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
 import { useAppContext } from '../context/AppContext';
 import { User, UserRole } from '../types';
 
@@ -13,9 +13,9 @@ const UserModal: React.FC<{
         password: '',
         role: UserRole.Cashier,
     };
-    const [formData, setFormData] = useState<Omit<User, 'id'>>(initialFormState);
+    const [formData, setFormData] = React.useState<Omit<User, 'id'>>(initialFormState);
 
-    useEffect(() => {
+    React.useEffect(() => {
         if(isOpen) {
             setFormData(initialFormState);
         }
@@ -73,7 +73,7 @@ const UserModal: React.FC<{
 
 const UsersPage: React.FC = () => {
     const { state, dispatch } = useAppContext();
-    const [isModalOpen, setModalOpen] = useState(false);
+    const [isModalOpen, setModalOpen] = React.useState(false);
 
     const handleAddUser = (user: Omit<User, 'id'>) => {
         dispatch({ type: 'ADD_USER', payload: user });

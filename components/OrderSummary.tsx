@@ -1,5 +1,4 @@
-
-import React from 'react';
+import * as React from 'react';
 import { OrderItem } from '../types';
 import { useAppContext } from '../context/AppContext';
 import { formatCurrency } from '../utils/formatter';

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import * as React from 'react';
 import { useAppContext } from '../context/AppContext';
 import { formatCurrency } from '../utils/formatter';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -21,9 +21,9 @@ const DashboardPage: React.FC = () => {
     const { liveOrders, products } = state;
 
     // Filter for paid orders to represent sales history
-    const orderHistory = useMemo(() => liveOrders.filter(o => o.status === OrderStatus.Paid), [liveOrders]);
+    const orderHistory = React.useMemo(() => liveOrders.filter(o => o.status === OrderStatus.Paid), [liveOrders]);
 
-    const todayStats = useMemo(() => {
+    const todayStats = React.useMemo(() => {
         const today = new Date().toISOString().split('T')[0];
         const todaysOrders = orderHistory.filter(o => o.createdAt.startsWith(today));
         const totalSales = todaysOrders.reduce((sum, o) => sum + o.total, 0);
@@ -33,7 +33,7 @@ const DashboardPage: React.FC = () => {
         };
     }, [orderHistory]);
 
-    const bestSellers = useMemo(() => {
+    const bestSellers = React.useMemo(() => {
         const itemCounts: { [key: string]: number } = {};
         orderHistory.forEach(order => {
             order.items.forEach(item => {
@@ -49,7 +49,7 @@ const DashboardPage: React.FC = () => {
             }));
     }, [orderHistory, products]);
 
-    const salesByDay = useMemo(() => {
+    const salesByDay = React.useMemo(() => {
         const days: { [key: string]: { date: string, sales: number } } = {};
         for (let i = 6; i >= 0; i--) {
             const d = new Date();

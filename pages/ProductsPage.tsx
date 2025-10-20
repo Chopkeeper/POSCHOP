@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
 import { useAppContext } from '../context/AppContext';
 import { Product } from '../types';
 import { formatCurrency } from '../utils/formatter';
@@ -11,10 +11,10 @@ const ProductModal: React.FC<{
     onClose: () => void;
     onSave: (product: Product) => void;
 }> = ({ product, isOpen, onClose, onSave }) => {
-    const [formData, setFormData] = useState<Product | null>(null);
-    const [isGenerating, setIsGenerating] = useState(false);
+    const [formData, setFormData] = React.useState<Product | null>(null);
+    const [isGenerating, setIsGenerating] = React.useState(false);
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (product) {
             setFormData(product);
         } else {
@@ -110,8 +110,8 @@ const ProductModal: React.FC<{
 
 const ProductsPage: React.FC = () => {
     const { state, dispatch } = useAppContext();
-    const [isModalOpen, setModalOpen] = useState(false);
-    const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+    const [isModalOpen, setModalOpen] = React.useState(false);
+    const [editingProduct, setEditingProduct] = React.useState<Product | null>(null);
 
     const handleAddProduct = () => {
         setEditingProduct(null);

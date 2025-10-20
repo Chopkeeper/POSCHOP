@@ -1,5 +1,4 @@
-
-import React, { useRef } from 'react';
+import * as React from 'react';
 import { Order, Settings } from '../types';
 import { formatCurrency } from '../utils/formatter';
 
@@ -11,7 +10,7 @@ interface ReceiptModalProps {
 }
 
 const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, settings, isOpen, onClose }) => {
-  const receiptRef = useRef<HTMLDivElement>(null);
+  const receiptRef = React.useRef<HTMLDivElement>(null);
   
   if (!isOpen || !order) return null;
 

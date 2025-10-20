@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { useAppContext } from '../context/AppContext';
 import { Order, OrderStatus } from '../types';
 
@@ -6,6 +6,7 @@ const OrderTicket: React.FC<{ order: Order; onStatusChange: (orderId: string, st
     const getStatusColor = () => {
         switch(order.status) {
             case OrderStatus.New: return 'bg-blue-500';
+            case OrderStatus.Paid: return 'bg-blue-500';
             case OrderStatus.Preparing: return 'bg-yellow-500';
             default: return 'bg-gray-400';
         }
@@ -32,7 +33,7 @@ const OrderTicket: React.FC<{ order: Order; onStatusChange: (orderId: string, st
                 ))}
             </ul>
             <div className="mt-2 flex flex-col gap-2">
-                 {order.status === OrderStatus.New && (
+                 {(order.status === OrderStatus.New || (order.status === OrderStatus.Paid && order.totalPrepTime > 0)) && (
                     <button 
                         onClick={() => onStatusChange(order.id, OrderStatus.Preparing)}
                         className="w-full bg-yellow-500 text-white font-bold py-2 rounded-lg hover:bg-yellow-600">
@@ -55,8 +56,10 @@ const OrderTicket: React.FC<{ order: Order; onStatusChange: (orderId: string, st
 const KitchenPage: React.FC = () => {
     const { state, dispatch } = useAppContext();
     
-    const activeOrders = state.liveOrders.filter(
-        o => o.status === OrderStatus.New || o.status === OrderStatus.Preparing
+    const activeOrders = state.liveOrders.filter(o =>
+        o.status === OrderStatus.New || 
+        o.status === OrderStatus.Preparing ||
+        (o.status === OrderStatus.Paid && o.totalPrepTime > 0)
     );
 
     const handleStatusChange = (orderId: string, status: OrderStatus) => {
@@ -72,7 +75,7 @@ const KitchenPage: React.FC = () => {
                 </div>
             ) : (
                 <div className="flex space-x-6 pb-4">
-                    {activeOrders.map(order => (
+                    {activeOrders.sort((a,b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()).map(order => (
                         <OrderTicket key={order.id} order={order} onStatusChange={handleStatusChange} />
                     ))}
                 </div>
